@@ -1,0 +1,94 @@
+{
+  "accountlinesIdPathParam": {
+    "$ref": "parameters/accountline.json#/accountlinesIdPathParam"
+  },
+  "batchOverlayReportContainerIdPathParam": {
+    "$ref": "parameters/batchoverlay.json#/batchOverlayReportContainerIdPathParam"
+  },
+  "biblionumbersQueryParam": {
+    "$ref": "parameters/biblio.json#/biblionumbersQueryParam"
+  },
+  "borrowernumberPathParam": {
+    "$ref": "parameters/patron.json#/borrowernumberPathParam"
+  },
+  "borrowernumberQueryParam": {
+    "$ref": "parameters/patron.json#/borrowernumberQueryParam"
+  },
+  "branchcodePathParam": {
+    "$ref": "parameters/library.json#/branchcodePathParam"
+  },
+  "branchcodeQueryParam": {
+    "$ref": "parameters/library.json#/branchcodeQueryParam"
+  },
+  "cardnumberPostParam": {
+    "$ref": "parameters/auth.json#/cardnumberPostParam"
+  },
+  "cardnumberQueryParam": {
+    "$ref": "parameters/patron.json#/cardnumberQueryParam"
+  },
+  "cityidPathParam": {
+    "$ref": "parameters/city.json#/cityidPathParam"
+  },
+  "holdIdPathParam": {
+    "$ref": "parameters/hold.json#/holdIdPathParam"
+  },
+  "checkoutIdPathParam": {
+    "$ref": "parameters/checkout.json#/checkoutIdPathParam"
+  },
+  "itemnumberPathParam": {
+    "$ref": "parameters/item.json#/itemnumberPathParam"
+  },
+  "itemnumbersQueryParam": {
+    "$ref": "parameters/item.json#/itemnumbersQueryParam"
+  },
+  "marcPostParam": {
+    "name": "marcxml",
+    "in": "formData",
+    "description": "MARCXML serialized into a form variable. Swagger2-spec forbids sending pure XML objects in the body so we work around the limitation",
+    "required": true,
+    "type": "string"
+  },
+  "message_idPathParam": {
+    "$ref": "parameters/notice.json#/message_idPathParam"
+  },
+  "passwordPostParam": {
+   "$ref": "parameters/auth.json#/passwordPostParam"
+  },
+  "useridPostParam": {
+   "$ref": "parameters/auth.json#/useridPostParam"
+  },
+  "useridQueryParam": {
+   "$ref": "parameters/patron.json#/useridQueryParam"
+  },
+  "sessionidBodyParam": {
+   "$ref": "parameters/auth.json#/sessionidBodyParam"
+  },
+  "surnameQueryParam": {
+    "$ref": "parameters/patron.json#/surnameQueryParam"
+  },
+  "biblionumberPathParam": {
+    "$ref": "parameters/biblio.json#/biblionumberPathParam"
+  },
+  "invoicenumberPathParam": {
+    "$ref": "parameters/payments/cpu.json#/invoicenumberPathParam"
+  },
+  "sheet_identifierPathParam": {
+    "$ref": "parameters/label.json#/sheet_identifierPathParam"
+  },
+  "sheet_versionPathParam": {
+    "$ref": "parameters/label.json#/sheet_versionPathParam"
+  },
+  "showAllExceptionsGetParam": {
+    "name": "showAllExceptions",
+    "in": "query",
+    "description": "Show all exception categories or default to showing only the most important ones.",
+    "required": false,
+    "type": "boolean"
+  },
+  "listnamePathParam": {
+    "$ref": "parameters/list.json#/listnamePathParam"
+  },
+  "listContent": {
+    "$ref": "parameters/list.json#/listContent"
+  }
+}
