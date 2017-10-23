@@ -183,6 +183,16 @@ my $marcxml_close = q{
 </collection>
 };
 
+my @filters;
+push @filters, 'EmbedItemsAvailability';
+push @filters, 'IncludeSeeFromInSearches'
+    if C4::Context->preference('IncludeSeeFromInSearches');
+
+my $normalizer = Koha::RecordProcessor->new( { filters => \@filters } );
+
+my $marcflavour = C4::Context->preference("marcflavour");
+my $is_unimarc = $marcflavour eq "UNIMARC";
+
 # Protect again simultaneous update of the zebra index by using a lock file.
 # Create our own lock directory if it is missing. This should be created
 # by koha-zebra-ctl.sh or at system installation. If the desired directory
@@ -542,7 +552,7 @@ sub export_marc_records_from_sth {
         my ($marc) = get_corrected_marc_record($record_type, $record_number);
         if (defined $marc) {
             eval {
-                my $rec = $marc->as_xml_record(C4::Context->preference('marcflavour'));
+                my $rec = $marc->as_xml_record($marcflavour);
                 eval {
                     my $doc = $tester->parse_string($rec);
                 };
@@ -586,7 +596,7 @@ sub export_marc_records_from_list {
         my ($marc) = get_corrected_marc_record($record_type, $record_number);
         if (defined $marc) {
             eval {
-                my $rec = $marc->as_xml_record(C4::Context->preference('marcflavour'));
+                my $rec = $marc->as_xml_record($marcflavour);
                 $rec =~ s!<\?xml version="1.0" encoding="UTF-8"\?>\n!!;
                 print {$fh} $rec;
                 $num_exported++;
@@ -624,11 +634,11 @@ sub generate_deleted_marc_records {
         } else {
             fix_authority_id($marc, $record_number);
         }
-        if (C4::Context->preference("marcflavour") eq "UNIMARC") {
+        if ($is_unimarc) {
             fix_unimarc_100($marc);
         }
 
-        my $rec = $marc->as_xml_record(C4::Context->preference('marcflavour'));
+        my $rec = $marc->as_xml_record($marcflavour);
         # Remove the record's XML header
         $rec =~ s!<\?xml version="1.0" encoding="UTF-8"\?>\n!!;
         print {$fh} $rec;
@@ -654,16 +664,9 @@ sub get_corrected_marc_record {
             fix_authority_id( $marc, $record_number );
         }
         elsif ( $record_type eq 'biblio' ) {
-
-            my @filters;
-            push @filters, 'EmbedItemsAvailability';
-            push @filters, 'IncludeSeeFromInSearches'
-                if C4::Context->preference('IncludeSeeFromInSearches');
-
-            my $normalizer = Koha::RecordProcessor->new( { filters => \@filters } );
             $marc = $normalizer->process($marc);
         }
-        if ( C4::Context->preference("marcflavour") eq "UNIMARC" ) {
+        if ( $is_unimarc ) {
             fix_unimarc_100($marc);
         }
     }
@@ -681,7 +684,7 @@ sub get_raw_marc_record {
             # here we do warn since catching an exception
             # means that the bib was found but failed
             # to be parsed
-            warn "error retrieving biblio $record_number";
+            warn "error retrieving biblio $record_number: " . ($@ ? $@ : 'no record returned');
             return;
         }
         _protectZebraFromTooManyItems($marc);
