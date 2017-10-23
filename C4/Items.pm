@@ -21,6 +21,7 @@ package C4::Items;
 use strict;
 #use warnings; FIXME - Bug 2505
 
+use Modern::Perl;
 use Carp;
 use C4::Context;
 use C4::Koha;
@@ -65,9 +66,9 @@ BEGIN {
         ModDateLastSeen
         ModItemTransfer
         DelItem
-    
+
         CheckItemPreSave
-    
+
         GetItemsForInventory
         GetItemsCountByBranch
         GetItemsByBiblioitemnumber
@@ -103,7 +104,7 @@ C4::Items - item management functions
 
 =head1 DESCRIPTION
 
-This module contains an API for manipulating item 
+This module contains an API for manipulating item
 records in Koha, and is used by cataloguing, circulation,
 acquisitions, and serials management.
 
@@ -117,7 +118,7 @@ modification transaction must keep the items table
 and the MARC XML in sync at all times.
 
 Consequently, all code that creates, modifies, or deletes
-item records B<must> use an appropriate function from 
+item records B<must> use an appropriate function from
 C<C4::Items>.  If no existing function is suitable, it is
 better to add one to C<C4::Items> than to use add
 one-off SQL statements to add or modify items.
@@ -223,7 +224,7 @@ sub ShelfToCart {
 
 =head2 AddItemFromMarc
 
-  my ($biblionumber, $biblioitemnumber, $itemnumber) 
+  my ($biblionumber, $biblioitemnumber, $itemnumber)
       = AddItemFromMarc($source_item_marc, $biblionumber);
 
 Given a MARC::Record object containing an embedded item
@@ -238,7 +239,7 @@ sub AddItemFromMarc {
     # parse item hash from MARC
     my $frameworkcode = GetFrameworkCode( $biblionumber );
 	my ($itemtag,$itemsubfield)=GetMarcFromKohaField("items.itemnumber",$frameworkcode);
-	
+
 	my $localitemmarc=MARC::Record->new;
 	$localitemmarc->append_fields($source_item_marc->field($itemtag));
     my $item = &TransformMarcToKoha( $localitemmarc, $frameworkcode ,'items');
@@ -248,7 +249,7 @@ sub AddItemFromMarc {
 
 =head2 AddItem
 
-  my ($biblionumber, $biblioitemnumber, $itemnumber) 
+  my ($biblionumber, $biblioitemnumber, $itemnumber)
       = AddItem($item, $biblionumber[, $dbh, $frameworkcode, $unlinked_item_subfields]);
 
 Given a hash containing item column names as keys,
@@ -262,7 +263,7 @@ The final optional parameter, C<$unlinked_item_subfields>, contains
 an arrayref containing subfields present in the original MARC
 representation of the item (e.g., from the item editor) that are
 not mapped to C<items> columns directly but should instead
-be stored in C<items.more_subfields_xml> and included in 
+be stored in C<items.more_subfields_xml> and included in
 the biblio items tag for display and indexing.
 
 =cut
@@ -310,7 +311,7 @@ sub AddItem {
 
 =head2 AddItemBatchFromMarc
 
-  ($itemnumber_ref, $error_ref) = AddItemBatchFromMarc($record, 
+  ($itemnumber_ref, $error_ref) = AddItemBatchFromMarc($record,
              $biblionumber, $biblioitemnumber, $frameworkcode);
 
 Efficiently create item records from a MARC biblio record with
@@ -375,7 +376,7 @@ sub AddItemBatchFromMarc {
         # and there is no TransformMarcFieldToKoha
         my $temp_item_marc = MARC::Record->new();
         $temp_item_marc->append_fields($item_field);
-    
+
         # add biblionumber and biblioitemnumber
         my $item = TransformMarcToKoha( $temp_item_marc, $frameworkcode, 'items' );
         my $unlinked_item_subfields = _get_unlinked_item_subfields($temp_item_marc, $frameworkcode);
@@ -398,7 +399,7 @@ sub AddItemBatchFromMarc {
         push @itemnumbers, $itemnumber; # FIXME not checking error
         $item->{'itemnumber'} = $itemnumber;
 
-        logaction("CATALOGUING", "ADD", $itemnumber, "item") if C4::Context->preference("CataloguingLog"); 
+        logaction("CATALOGUING", "ADD", $itemnumber, "item") if C4::Context->preference("CataloguingLog");
 
         my $new_item_marc = _marc_from_item_hash($item, $frameworkcode, $unlinked_item_subfields);
         $item_field->replace_with($new_item_marc->field($itemtag));
@@ -421,7 +422,7 @@ sub AddItemBatchFromMarc {
 
 This function updates an item record based on a supplied
 C<MARC::Record> object containing an embedded item field.
-This API is meant for the use of C<additem.pl>; for 
+This API is meant for the use of C<additem.pl>; for
 other purposes, C<ModItem> should be used.
 
 This function uses the hash %default_values_for_mod_from_marc,
@@ -515,7 +516,7 @@ sub ModItemFromMarc {
     }
     my $unlinked_item_subfields = _get_unlinked_item_subfields( $localitemmarc, $frameworkcode );
 
-    ModItem($item, $biblionumber, $itemnumber, $dbh, $frameworkcode, $unlinked_item_subfields); 
+    ModItem($item, $biblionumber, $itemnumber, $dbh, $frameworkcode, $unlinked_item_subfields);
     return $item;
 }
 
@@ -534,11 +535,11 @@ The fourth, optional parameter, C<$unlinked_item_subfields>, contains
 an arrayref containing subfields present in the original MARC
 representation of the item (e.g., from the item editor) that are
 not mapped to C<items> columns directly but should instead
-be stored in C<items.more_subfields_xml> and included in 
+be stored in C<items.more_subfields_xml> and included in
 the biblio items tag for display and indexing.
 
 If one of the changed columns is used to calculate
-the derived value of a column such as C<items.cn_sort>, 
+the derived value of a column such as C<items.cn_sort>,
 this routine will perform the necessary calculation
 and set the value.
 
@@ -556,8 +557,8 @@ sub ModItem {
 
     my $dbh           = @_ ? shift : C4::Context->dbh;
     my $frameworkcode = @_ ? shift : GetFrameworkCode( $biblionumber );
-    
-    my $unlinked_item_subfields;  
+
+    my $unlinked_item_subfields;
     if (@_) {
         $unlinked_item_subfields = shift;
         $item->{'more_subfields_xml'} = _get_unlinked_subfields_xml($unlinked_item_subfields);
@@ -648,7 +649,7 @@ C<$itemnum> is the item number
 
 sub ModDateLastSeen {
     my ($itemnumber) = @_;
-    
+
     my $today = output_pref({ dt => dt_from_string, dateformat => 'iso', dateonly => 1 });
     ModItem({ itemlost => 0, datelastseen => $today }, undef, $itemnumber);
 }
@@ -764,7 +765,7 @@ sub CheckItemPreSave {
 
 =head1 EXPORTED SPECIAL ACCESSOR FUNCTIONS
 
-The following functions provide various ways of 
+The following functions provide various ways of
 getting an item record, a set of item records, or
 lists of authorized values for certain item fields.
 
@@ -964,9 +965,9 @@ sub GetItemsByBiblioitemnumber {
     my $sth = $dbh->prepare("SELECT * FROM items WHERE items.biblioitemnumber = ?") || die $dbh->errstr;
     # Get all items attached to a biblioitem
     my $i = 0;
-    my @results; 
+    my @results;
     $sth->execute($bibitem) || die $sth->errstr;
-    while ( my $data = $sth->fetchrow_hashref ) {  
+    while ( my $data = $sth->fetchrow_hashref ) {
         # Foreach item, get circulation information
         my $sth2 = $dbh->prepare( "SELECT * FROM issues,borrowers
                                    WHERE itemnumber = ?
@@ -981,9 +982,9 @@ sub GetItemsByBiblioitemnumber {
         }
         else {
             # set date_due to blank, so in the template we check itemlost, and withdrawn
-            $data->{'date_due'} = '';                                                                                                         
-        }    # else         
-        # Find the last 3 people who borrowed this item.                  
+            $data->{'date_due'} = '';
+        }    # else
+        # Find the last 3 people who borrowed this item.
         my $query2 = "SELECT * FROM old_issues, borrowers WHERE itemnumber = ?
                       AND old_issues.borrowernumber = borrowers.borrowernumber
                       ORDER BY returndate desc,timestamp desc LIMIT 3";
@@ -997,8 +998,8 @@ sub GetItemsByBiblioitemnumber {
             $i2++;
         }
         push(@results,$data);
-    } 
-    return (\@results); 
+    }
+    return (\@results);
 }
 
 =head2 GetItemsInfo
@@ -1182,7 +1183,7 @@ The intranet description for the Shelving Location as set in authorised_values '
 
 =item C<$data-E<gt>{location_opac}>
 
-The OPAC description for the Shelving Location as set in authorised_values 'LOC'.  Falls back to intranet description if no OPAC 
+The OPAC description for the Shelving Location as set in authorised_values 'LOC'.  Falls back to intranet description if no OPAC
 description is set.
 
 =item C<$data-E<gt>{itemcallnumber}>
@@ -1194,7 +1195,7 @@ Item's itemcallnumber
 Item's call number normalized for sorting
 
 =back
-  
+
 =cut
 
 sub GetItemsLocationInfo {
@@ -1202,10 +1203,10 @@ sub GetItemsLocationInfo {
         my @results;
 
 	my $dbh = C4::Context->dbh;
-	my $query = "SELECT a.branchname as homebranch, b.branchname as holdingbranch, 
+	my $query = "SELECT a.branchname as homebranch, b.branchname as holdingbranch,
 			    location, itemcallnumber, cn_sort
 		     FROM items, branches as a, branches as b
-		     WHERE homebranch = a.branchcode AND holdingbranch = b.branchcode 
+		     WHERE homebranch = a.branchcode AND holdingbranch = b.branchcode
 		     AND biblionumber = ?
 		     ORDER BY cn_sort ASC";
 	my $sth = $dbh->prepare($query);
@@ -1264,7 +1265,7 @@ sub GetHostItemsInfo {
 
 =head2 GetLastAcquisitions
 
-  my $lastacq = GetLastAcquisitions({'branches' => ('branch1','branch2'), 
+  my $lastacq = GetLastAcquisitions({'branches' => ('branch1','branch2'),
                                     'itemtypes' => ('BK','BD')}, 10);
 
 =cut
@@ -1273,43 +1274,43 @@ sub  GetLastAcquisitions {
 	my ($data,$max) = @_;
 
 	my $itemtype = C4::Context->preference('item-level_itypes') ? 'itype' : 'itemtype';
-	
+
 	my $number_of_branches = @{$data->{branches}};
 	my $number_of_itemtypes   = @{$data->{itemtypes}};
-	
-	
-	my @where = ('WHERE 1 '); 
+
+
+	my @where = ('WHERE 1 ');
 	$number_of_branches and push @where
-	   , 'AND holdingbranch IN (' 
+	   , 'AND holdingbranch IN ('
 	   , join(',', ('?') x $number_of_branches )
 	   , ')'
 	 ;
-	
+
 	$number_of_itemtypes and push @where
-	   , "AND $itemtype IN (" 
+	   , "AND $itemtype IN ("
 	   , join(',', ('?') x $number_of_itemtypes )
 	   , ')'
 	 ;
 
 	my $query = "SELECT biblio.biblionumber as biblionumber, title, dateaccessioned
-				 FROM items RIGHT JOIN biblio ON (items.biblionumber=biblio.biblionumber) 
+				 FROM items RIGHT JOIN biblio ON (items.biblionumber=biblio.biblionumber)
 			            RIGHT JOIN biblioitems ON (items.biblioitemnumber=biblioitems.biblioitemnumber)
 			            @where
-			            GROUP BY biblio.biblionumber 
+			            GROUP BY biblio.biblionumber
 			            ORDER BY dateaccessioned DESC LIMIT $max";
 
 	my $dbh = C4::Context->dbh;
 	my $sth = $dbh->prepare($query);
-    
+
     $sth->execute((@{$data->{branches}}, @{$data->{itemtypes}}));
-	
+
 	my @results;
 	while( my $row = $sth->fetchrow_hashref){
-		push @results, {date => $row->{dateaccessioned} 
+		push @results, {date => $row->{dateaccessioned}
 						, biblionumber => $row->{biblionumber}
 						, title => $row->{title}};
 	}
-	
+
 	return @results;
 }
 
@@ -1508,16 +1509,16 @@ sub GetMarcItem {
     # Tack on 'items.' prefix to column names so that TransformKohaToMarc will work.
     # Also, don't emit a subfield if the underlying field is blank.
 
-    
+
     return Item2Marc($itemrecord,$biblionumber);
 
 }
 sub Item2Marc {
 	my ($itemrecord,$biblionumber)=@_;
-    my $mungeditem = { 
-        map {  
-            defined($itemrecord->{$_}) && $itemrecord->{$_} ne '' ? ("items.$_" => $itemrecord->{$_}) : ()  
-        } keys %{ $itemrecord } 
+    my $mungeditem = {
+        map {
+            defined($itemrecord->{$_}) && $itemrecord->{$_} ne '' ? ("items.$_" => $itemrecord->{$_}) : ()
+        } keys %{ $itemrecord }
     };
     my $itemmarc = TransformKohaToMarc($mungeditem);
     my ( $itemtag, $itemsubfield ) = GetMarcFromKohaField("items.itemnumber",GetFrameworkCode($biblionumber)||'');
@@ -1529,6 +1530,63 @@ sub Item2Marc {
         }
     }
 	return $itemmarc;
+}
+
+=head2 GetMarcItemFields
+
+  my @marc_fields = GetMarcItemFields($biblionumber, $frameworkcode);
+
+Returns an array of MARC::Record objects of the items for the biblio.
+
+=cut
+
+sub GetMarcItemFields {
+	my ( $biblionumber, $frameworkcode, $itemnumbers, $hidingrules ) = @_;
+
+    my @items = Koha::Items->search( { biblionumber => $biblionumber } );
+    my @item_fields;
+    my ( $itemtag, $itemsubfield ) = GetMarcFromKohaField( 'items.itemnumber', $frameworkcode );
+
+    ITEMLOOP: foreach my $item (@items) {
+
+        # Check itemnumbers
+        next if ( @$itemnumbers && !any { $_ == $item->itemnumber } @$itemnumbers );
+
+        # Check hiding rules
+        if ( defined $hidingrules ) {
+            foreach my $field (keys %$hidingrules) {
+                my $val = $item->{$field};
+                $val = '' unless defined $val;
+
+                # If the results matches the values in the hiding rules, skip the item
+                if (any { $val eq $_ } @{$hidingrules->{$field}}) {
+                    next ITEMLOOP;
+                }
+            }
+        }
+
+        my $data = $item->unblessed();
+        $data->{itype} = $item->effective_itemtype(); # set the correct itype
+        $item = undef;
+
+        my $mungeditem = {
+            map {
+                defined($data->{$_}) && $data->{$_} ne '' ? ("items.$_" => $data->{$_}) : ()
+            } keys %{ $data }
+        };
+        my $itemmarc = TransformKohaToMarc($mungeditem);
+
+        my $unlinked_item_subfields = _parse_unlinked_item_subfields_from_xml($mungeditem->{'items.more_subfields_xml'});
+        if (defined $unlinked_item_subfields and $#$unlinked_item_subfields > -1) {
+            foreach my $field ($itemmarc->field($itemtag)){
+                $field->add_subfields(@$unlinked_item_subfields);
+            }
+        }
+
+        push @item_fields, $itemmarc->field( $itemtag );
+    }
+
+    return \@item_fields;
 }
 
 =head1 PRIVATE FUNCTIONS AND VARIABLES
@@ -1564,7 +1622,7 @@ my %derived_columns = (
     }
 );
 
-=head2 _set_derived_columns_for_add 
+=head2 _set_derived_columns_for_add
 
   _set_derived_column_for_add($item);
 
@@ -1588,7 +1646,7 @@ sub _set_derived_columns_for_add {
     }
 }
 
-=head2 _set_derived_columns_for_mod 
+=head2 _set_derived_columns_for_mod
 
   _set_derived_column_for_mod($item);
 
@@ -1691,12 +1749,12 @@ row specified by C<$itemnumber>.
 sub _get_single_item_column {
     my $column = shift;
     my $itemnumber = shift;
-    
+
     my $dbh = C4::Context->dbh;
     my $sth = $dbh->prepare("SELECT $column FROM items WHERE itemnumber = ?");
     $sth->execute($itemnumber);
     my ($value) = $sth->fetchrow();
-    return $value; 
+    return $value;
 }
 
 =head2 _calc_items_cn_sort
@@ -1714,7 +1772,7 @@ sub _calc_items_cn_sort {
     $item->{'items.cn_sort'} = GetClassSort($source_values->{'items.cn_source'}, $source_values->{'itemcallnumber'}, "");
 }
 
-=head2 _set_defaults_for_add 
+=head2 _set_defaults_for_add
 
   _set_defaults_for_add($item_hash);
 
@@ -1725,7 +1783,7 @@ columns:
 
 =over 2
 
-=item * 
+=item *
 
 C<items.dateaccessioned>
 
@@ -1765,7 +1823,7 @@ Perform the actual insert into the C<items> table.
 
 sub _koha_new_item {
     my ( $item, $barcode ) = @_;
-    my $dbh=C4::Context->dbh;  
+    my $dbh=C4::Context->dbh;
     my $error;
     $item->{permanent_location} //= $item->{location};
     _mod_item_dates( $item );
@@ -1898,7 +1956,7 @@ sub MoveItemFromBiblio {
     if ($return == 1) {
         ModZebra( $tobiblio, "specialUpdate", "biblioserver" );
         ModZebra( $frombiblio, "specialUpdate", "biblioserver" );
-	    # Checking if the item we want to move is in an order 
+	    # Checking if the item we want to move is in an order
         require C4::Acquisition;
         my $order = C4::Acquisition::GetOrderFromItemnumber($itemnumber);
 	    if ($order) {
@@ -2029,7 +2087,7 @@ routine accepts a hashref specifying the columns to update.
 
 sub _koha_modify_item {
     my ( $item ) = @_;
-    my $dbh=C4::Context->dbh;  
+    my $dbh=C4::Context->dbh;
     my $error;
 
     my $query = "UPDATE items SET ";
@@ -2139,12 +2197,12 @@ sub _marc_from_item_hash {
     if (@_) {
         $unlinked_item_subfields = shift;
     }
-   
+
     # Tack on 'items.' prefix to column names so lookup from MARC frameworks will work
     # Also, don't emit a subfield if the underlying field is blank.
-    my $mungeditem = { map {  (defined($item->{$_}) and $item->{$_} ne '') ? 
-                                (/^items\./ ? ($_ => $item->{$_}) : ("items.$_" => $item->{$_})) 
-                                : ()  } keys %{ $item } }; 
+    my $mungeditem = { map {  (defined($item->{$_}) and $item->{$_} ne '') ?
+                                (/^items\./ ? ($_ => $item->{$_}) : ("items.$_" => $item->{$_}))
+                                : ()  } keys %{ $item } };
 
     my $item_marc = MARC::Record->new();
     foreach my $item_field ( keys %{$mungeditem} ) {
@@ -2188,7 +2246,7 @@ sub _repack_item_errors {
         $repacked_error->{'error_code'} = $error_code;
         $repacked_error->{'error_information'} = $error_ref->{$error_code};
         push @repacked_errors, $repacked_error;
-    } 
+    }
 
     return @repacked_errors;
 }
@@ -2238,7 +2296,7 @@ sub _get_unlinked_subfields_xml {
         # use of tag 999 is arbitrary, and doesn't need to match the item tag
         # used in the framework
         $marc->append_fields(MARC::Field->new('999', ' ', ' ', @$unlinked_item_subfields));
-        $marc->encoding("UTF-8");    
+        $marc->encoding("UTF-8");
         $xml = $marc->as_xml("USMARC");
     }
 
@@ -2270,7 +2328,7 @@ sub  _parse_unlinked_item_subfields_from_xml {
 
   $count= &GetAnalyticsCount($itemnumber)
 
-counts Usage of itemnumber in Analytical bibliorecords. 
+counts Usage of itemnumber in Analytical bibliorecords.
 
 =cut
 
