@@ -508,6 +508,7 @@ sub export_marc_records_from_sth {
     print {$fh} $marcxml_open;
 
     my $i = 0;
+    my $starttime = time;
     my ( $itemtag, $itemsubfield ) = GetMarcFromKohaField("items.itemnumber",'');
     while (my ($record_number) = $sth->fetchrow_array) {
         print "." if ( $verbose_logging );
@@ -569,7 +570,8 @@ sub export_marc_records_from_sth {
             }
         }
     }
-    print "\nRecords exported: $num_exported\n" if ( $verbose_logging );
+    my $duration = time - $starttime || 1;
+    print "\nRecords exported: $num_exported (" . int($num_exported / $duration) . "/sec)\n" if ( $verbose_logging );
     print {$fh} $marcxml_close;
 
     close $fh;
