@@ -693,7 +693,7 @@ sub get_raw_marc_record {
     } else {
         eval { $marc = GetAuthority($record_number); };
         if ($@) {
-            warn "error retrieving authority $record_number";
+            warn "error retrieving authority $record_number: " . $@;
             return;
         }
     }
@@ -726,7 +726,8 @@ sub fix_biblio_ids {
     if (@_) {
         $biblioitemnumber = shift;
     } else {
-        my $sth = $dbh->prepare(
+        # Use state to speed up repeated calls in batch processes
+        state $sth = $dbh->prepare(
             "SELECT biblioitemnumber FROM biblioitems WHERE biblionumber=?");
         $sth->execute($biblionumber);
         ($biblioitemnumber) = $sth->fetchrow_array;
