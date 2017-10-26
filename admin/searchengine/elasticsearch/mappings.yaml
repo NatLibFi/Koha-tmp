@@ -571,7 +571,7 @@ biblios:
         marc_type: normarc
         sort: ~
         suggestible: ''
-    type: number
+    type: string
   Local-number:
     label: Local-number
     mappings:
