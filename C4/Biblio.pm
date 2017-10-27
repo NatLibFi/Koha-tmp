@@ -4398,8 +4398,6 @@ sub _getComponentParts {
         warn "Record with no field 001 encountered!" unless $parentrecord;
     }
 
-use Data::Dumper;
-die Dumper($componentPartRecordXMLs);
     return ($parentsField001, $parentsField003, $parentrecord, $error, $componentPartRecordXMLs, $resultSetSize);
 }
 
