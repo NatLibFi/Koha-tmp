@@ -4383,21 +4383,23 @@ sub _getComponentParts {
     }
 
     my ($error, $componentPartRecordXMLs, $resultSetSize);
-    my $id_index = C4::Context->preference('SearchEngine') eq 'ElasticSearch' ? 'hrcn' : 'rcn';
+    my $id_index = C4::Context->preference('SearchEngine') eq 'Elasticsearch' ? 'hrcn' : 'rcn';
     if ($parentsField001 && $parentsField003) {
         require Koha::SearchEngine;
         my $searcher = Koha::SearchEngine::Search->new({index => $Koha::SearchEngine::BIBLIOS_INDEX});
-        ($error, $componentPartRecordXMLs, $resultSetSize) = $searcher->simple_search_compat("($id_index='$parentsField001' and cni='$parentsField003') OR $id_index='($parentsField003)$parentsField001'");
+        ($error, $componentPartRecordXMLs, $resultSetSize) = $searcher->simple_search_compat("($id_index='$parentsField001' AND cni='$parentsField003') OR $id_index='($parentsField003)$parentsField001'");
     }
     elsif ($parentsField001) {
         require Koha::SearchEngine::Search;
         my $searcher = Koha::SearchEngine::Search->new({index => $Koha::SearchEngine::BIBLIOS_INDEX});
-        ($error, $componentPartRecordXMLs, $resultSetSize) = $searcher->simple_search_compat("hrcn='$parentsField001'");
+        ($error, $componentPartRecordXMLs, $resultSetSize) = $searcher->simple_search_compat("$id_index='$parentsField001'");
     }
     else {
         warn "Record with no field 001 encountered!" unless $parentrecord;
     }
 
+use Data::Dumper;
+die Dumper($componentPartRecordXMLs);
     return ($parentsField001, $parentsField003, $parentrecord, $error, $componentPartRecordXMLs, $resultSetSize);
 }
 
