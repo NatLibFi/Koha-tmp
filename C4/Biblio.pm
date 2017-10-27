@@ -4387,7 +4387,7 @@ sub _getComponentParts {
     if ($parentsField001 && $parentsField003) {
         require Koha::SearchEngine;
         my $searcher = Koha::SearchEngine::Search->new({index => $Koha::SearchEngine::BIBLIOS_INDEX});
-        ($error, $componentPartRecordXMLs, $resultSetSize) = $searcher->simple_search_compat("$id_index='$parentsField001' and cni='$parentsField003'");
+        ($error, $componentPartRecordXMLs, $resultSetSize) = $searcher->simple_search_compat("($id_index='$parentsField001' and cni='$parentsField003') OR $id_index='($parentsField003)$parentsField001'");
     }
     elsif ($parentsField001) {
         require Koha::SearchEngine::Search;
