@@ -96,6 +96,7 @@ sub search {
             %$params,
         )
     ) unless $self->store;
+    $self->store->bag->{maximum_limit} = 10000;
     my $results = eval {
         $self->store->bag->search( %$query, %paging );
     };
