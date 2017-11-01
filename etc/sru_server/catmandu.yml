@@ -3,7 +3,6 @@ store:
   sru:
     package: ElasticSearch
     options:
-      index_name: koha_robin_biblios
       bags:
         data:
           cql_mapping:
