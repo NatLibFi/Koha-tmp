@@ -611,6 +611,7 @@ our %index_field_convert = (
     'au'      => 'author',
     'su'      => 'subject',
     'nb'      => 'isbn',
+    'se'      => 'se',
     'callnum' => 'callnum',
     'itype'   => 'itype',
     'ln'      => 'ln',
