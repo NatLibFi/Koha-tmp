@@ -235,7 +235,7 @@
         <span class="results_summary series"><span class="label">Series: </span>
         <!-- 440 -->
         <xsl:for-each select="marc:datafield[@tag=440]">
-            <a><xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=se,phr:"<xsl:value-of select="marc:subfield[@code='a']"/>"</xsl:attribute>
+            <a><xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=se,phr:"<xsl:value-of select="translate(marc:subfield[@code='a'], ';()', '')"/>"</xsl:attribute>
             <xsl:call-template name="chopPunctuation">
                             <xsl:with-param name="chopString">
                                 <xsl:call-template name="subfieldSelect">
@@ -250,7 +250,7 @@
 
         <!-- 490 Series not traced, Ind1 = 0 -->
         <xsl:for-each select="marc:datafield[@tag=490][@ind1!=1]">
-            <a><xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=se,phr:"<xsl:value-of select="marc:subfield[@code='a']"/>"</xsl:attribute>
+            <a><xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=se,phr:"<xsl:value-of select="translate(marc:subfield[@code='a'], ';()', '')"/>"</xsl:attribute>
                         <xsl:call-template name="chopPunctuation">
                             <xsl:with-param name="chopString">
                                 <xsl:call-template name="subfieldSelect">
@@ -278,7 +278,7 @@
                         </a>
                     </xsl:when>
                     <xsl:otherwise>
-                        <a><xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=se,phr:"<xsl:value-of select="marc:subfield[@code='a']"/>"</xsl:attribute>
+                        <a><xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=se,phr:"<xsl:value-of select="translate(marc:subfield[@code='a'], ';()', '')"/>"</xsl:attribute>
                             <xsl:call-template name="chopPunctuation">
                                 <xsl:with-param name="chopString">
                                     <xsl:call-template name="subfieldSelect">
