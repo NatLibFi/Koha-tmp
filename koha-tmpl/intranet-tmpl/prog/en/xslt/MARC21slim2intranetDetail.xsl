@@ -1281,7 +1281,7 @@
         <xsl:if test="marc:subfield[@code='9']">
           <a>
             <xsl:attribute name="href">/cgi-bin/koha/authorities/detail.pl?authid=<xsl:value-of select="marc:subfield[@code='9']"/></xsl:attribute>
-            <img src="/intranet-tmpl/prog/img/test/famfamfam/silk/information.png" alt="authority record" title="authority record"/>
+            <img src="/intranet-tmpl/prog/img/famfamfam/silk/information.png" alt="authority record" title="authority record"/>
           </a>
         </xsl:if>
      
