@@ -319,7 +319,7 @@ sub _load {
     }
 
     #Register useful utility functions
-    $self->{xslt_hash}->{$rv}->register_function('urn:kohautil', 'urlencode', \&uri_escape_utf8);
+    $self->{xslt_hash}->{$rv}->register_function('urn:kohautil', 'urlencode', \&uri_escape);
 
     return $rv;
 }
