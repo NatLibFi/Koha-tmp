@@ -1487,11 +1487,11 @@
                                     <xsl:for-each select="marc:subfield[@code='j']">
                                         <a>
                                             <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=au:"<xsl:value-of select="util:urlencode(../marc:subfield[@code='a'])"/>%20<xsl:value-of select="util:urlencode(.)"/>"</xsl:attribute>
-                        <xsl:call-template name="chopPunctuation">
-                          <xsl:with-param name="chopString">
-                        <xsl:value-of select="."/>
-                          </xsl:with-param>
-                        </xsl:call-template>
+                                            <xsl:call-template name="chopPunctuation">
+                                                <xsl:with-param name="chopString">
+                                                    <xsl:value-of select="."/>
+                                                </xsl:with-param>
+                                            </xsl:call-template>
                                         </a>
                                         <xsl:if test="position() != last()">, </xsl:if>
                                     </xsl:for-each>
@@ -1509,11 +1509,11 @@
                             <xsl:for-each select="marc:subfield[@code='e']">
                                 <a>
                                     <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=au:"<xsl:value-of select="util:urlencode(../marc:subfield[@code='a'])"/>%20<xsl:value-of select="util:urlencode(.)"/>"</xsl:attribute>
-                        <xsl:call-template name="chopPunctuation">
-                          <xsl:with-param name="chopString">
-                        <xsl:value-of select="."/>
-                          </xsl:with-param>
-                        </xsl:call-template>
+                                    <xsl:call-template name="chopPunctuation">
+                                        <xsl:with-param name="chopString">
+                                            <xsl:value-of select="."/>
+                                        </xsl:with-param>
+                                    </xsl:call-template>
                                 </a>
                                 <xsl:if test="position() != last()">, </xsl:if>
                             </xsl:for-each>
