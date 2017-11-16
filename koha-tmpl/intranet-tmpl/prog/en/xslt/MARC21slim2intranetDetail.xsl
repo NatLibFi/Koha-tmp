@@ -88,18 +88,18 @@
                 <xsl:when test="$leader6='e' or $leader6='f'">Map</xsl:when>
                 <xsl:when test="$leader6='g' or $leader6='k' or $leader6='r'">Visual material</xsl:when>
                 <xsl:when test="$leader6='j'">
-          <xsl:choose>
-                    <xsl:when test="$leader7='a' or $leader7='b'">Music (Component)</xsl:when>
-            <xsl:otherwise>Music</xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
+                    <xsl:choose>
+                        <xsl:when test="$leader7='a' or $leader7='b'">Music (Component)</xsl:when>
+                        <xsl:otherwise>Music</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
                 <xsl:when test="$leader6='i'">Sound</xsl:when>
-        <xsl:when test="$leader6='c' or $leader6='d'">
-          <xsl:choose>
-            <xsl:when test="$leader7='a' or $leader7='b'">Score (Component)</xsl:when>
-            <xsl:otherwise>Score</xsl:otherwise>
-          </xsl:choose>
-        </xsl:when>
+                <xsl:when test="$leader6='c' or $leader6='d'">
+                    <xsl:choose>
+                        <xsl:when test="$leader7='a' or $leader7='b'">Score (Component)</xsl:when>
+                        <xsl:otherwise>Score</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
             </xsl:choose>
         </xsl:variable>
 
