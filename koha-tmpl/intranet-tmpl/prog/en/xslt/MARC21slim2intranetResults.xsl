@@ -937,6 +937,20 @@
     </span>
     </xsl:if>
 
+    <!-- Other identifiers: ISRC & ISMN & Publisher numbers -->
+    
+    <xsl:if test="marc:datafield[@tag=024] or marc:datafield[@tag=028]">
+      <span class="results_summary otherid"><span class="label">Other identifiers: </span>
+      <xsl:for-each select="marc:datafield[@tag=024 or @tag=028]">
+        <xsl:call-template name="subfieldSelect">
+          <xsl:with-param name="codes">ba</xsl:with-param>
+        </xsl:call-template>
+        <xsl:choose><xsl:when test="position()=last()"><xsl:text>.</xsl:text></xsl:when><xsl:otherwise><xsl:text>; </xsl:text></xsl:otherwise></xsl:choose>
+      </xsl:for-each>
+      </span>
+    </xsl:if>
+    
+    
     <xsl:if test="marc:datafield[@tag=250]">
     <span class="results_summary">
     <span class="label">Edition: </span>
