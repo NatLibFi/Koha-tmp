@@ -263,6 +263,16 @@ sub _init {
     return;
 }
 
+# _urlencode
+# internal routine for URL-encoding strings
+
+sub _urlencode {
+    my ($str) = @_;
+
+    utf8::decode($str);
+    return uri_escape_utf8($str); #Encode::encode_utf8($str));
+}
+
 # _load
 # Internal routine for loading a new stylesheet.
 
@@ -319,7 +329,7 @@ sub _load {
     }
 
     #Register useful utility functions
-    $self->{xslt_hash}->{$rv}->register_function('urn:kohautil', 'urlencode', \&uri_escape);
+    $self->{xslt_hash}->{$rv}->register_function('urn:kohautil', 'urlencode', \&_urlencode);
 
     return $rv;
 }
