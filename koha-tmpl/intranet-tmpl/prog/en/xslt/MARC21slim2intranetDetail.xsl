@@ -384,7 +384,8 @@
                         </xsl:if>
                         <xsl:text> </xsl:text>
                         <xsl:if test="marc:subfield[@code='b']">
-                        <a href="/cgi-bin/koha/catalogue/search.pl?q=Provider:{marc:subfield[@code='b']}">
+                        <a>
+                            <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=Provider:"<xsl:value-of select="util:urlencode(marc:subfield[@code='b'])"/>"</xsl:attribute>
                             <xsl:call-template name="subfieldSelect">
                                 <xsl:with-param name="codes">b</xsl:with-param>
                             </xsl:call-template>
