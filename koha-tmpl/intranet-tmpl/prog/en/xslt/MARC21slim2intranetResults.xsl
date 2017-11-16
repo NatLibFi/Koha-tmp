@@ -653,7 +653,7 @@
                 festschrift
             </xsl:if>
 
-            <xsl:if test="$controlField008-33 and $controlField008-33!='|' and $controlField008-33!='u' and $controlField008-33!=' '">
+            <xsl:if test="$controlField008-33 and $controlField008-33!='|' and $controlField008-33!='u' and $controlField008-33!=' ' and $controlField008-30-31!='nn'">
             <span class="label">; Literary form: </span>
             </xsl:if>
             <xsl:choose>
@@ -690,6 +690,12 @@
                 <xsl:when test="$controlField008-33='s'">
                     Speeches
                 </xsl:when>
+		<xsl:when test="$controlField008-33='z'">
+		  other
+		</xsl:when>
+	        <xsl:when test="$controlField008-33='|'">
+		  unspecified
+		</xsl:when>
             </xsl:choose>
         </span>
         </xsl:if>
