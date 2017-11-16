@@ -122,6 +122,7 @@ Koha::XSLT_Handler - Facilitate use of XSLT transformations
 use Modern::Perl;
 use XML::LibXML;
 use XML::LibXSLT;
+use URI::Escape;
 
 use base qw(Class::Accessor);
 
@@ -316,6 +317,10 @@ sub _load {
         delete $self->{xslt_hash}->{$rv};
         return;
     }
+
+    #Register useful utility functions
+    $self->{xslt_hash}->{$rv}->register_function('urn:kohautil', 'urlencode', \&uri_escape_utf8);
+
     return $rv;
 }
 
