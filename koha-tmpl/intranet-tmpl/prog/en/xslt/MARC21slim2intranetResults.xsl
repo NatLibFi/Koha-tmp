@@ -541,9 +541,19 @@
                 <xsl:when test="$leader6='m'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/computer_link.png" alt="computer file" title="computer file" class="materialtype"/> Computer file</xsl:when>
                 <xsl:when test="$leader6='e' or $leader6='f'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/map.png" alt="map" title="map" class="materialtype"/> Map</xsl:when>
                 <xsl:when test="$leader6='g' or $leader6='k' or $leader6='r'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/film.png" alt="visual material" title="visual material" class="materialtype"/> Visual material</xsl:when>
-                <xsl:when test="$leader6='c' or $leader6='d'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/music.png" alt="score" title="score" class="materialtype"/> Score</xsl:when>
+                <xsl:when test="$leader6='c' or $leader6='d'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/music.png" alt="score" title="score" class="materialtype"/>
+                    <xsl:choose>
+                        <xsl:when test="$leader7='a' or $leader7='b'"> Score (Component) </xsl:when> 
+                        <xsl:otherwise> Score </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
                 <xsl:when test="$leader6='i'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/sound.png" alt="sound" title="sound" class="materialtype"/> Sound</xsl:when>
-                <xsl:when test="$leader6='j'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/sound.png" alt="music" title="music" class="materialtype"/> Music</xsl:when>
+                <xsl:when test="$leader6='j'"><img src="/intranet-tmpl/prog/img/famfamfam/silk/sound.png" alt="music" title="music" class="materialtype"/>
+                    <xsl:choose>
+                        <xsl:when test="$leader7='a' or $leader7='b'"> Music (Component) </xsl:when> 
+                        <xsl:otherwise> Music </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
             </xsl:choose>
         </span>
     </xsl:if>
@@ -586,7 +596,7 @@
                     abstract or summary
                 </xsl:when>
                 <xsl:when test="contains($controlField008-24,'b')">
-            bibliography
+                    bibliography
                 </xsl:when>
                 <xsl:when test="contains($controlField008-24,'c')">
                     catalog
@@ -675,7 +685,7 @@
                 festschrift
             </xsl:if>
 
-            <xsl:if test="$controlField008-33 and $controlField008-33!='|' and $controlField008-33!='u' and $controlField008-33!=' '">
+            <xsl:if test="$controlField008-33 and $controlField008-33!='|' and $controlField008-33!='u' and $controlField008-33!=' ' and $controlField008-30-31!='nn'">
             <span class="label">; Literary form: </span>
             </xsl:if>
             <xsl:choose>
@@ -711,6 +721,12 @@
                 </xsl:when>
                 <xsl:when test="$controlField008-33='s'">
                     Speeches
+                </xsl:when>
+                <xsl:when test="$controlField008-33='z'">
+                    Other
+                </xsl:when>
+                <xsl:when test="$controlField008-33='|'">
+                    Unspecified
                 </xsl:when>
             </xsl:choose>
         </span>
@@ -953,6 +969,22 @@
     </span>
     </xsl:if>
 
+    <!-- Other identifiers: ISRC & ISMN & Publisher numbers -->
+    
+    <xsl:if test="marc:datafield[@tag=024] or marc:datafield[@tag=028]">
+        <span class="results_summary otherid"><span class="label">Other identifiers: </span>
+        <xsl:for-each select="marc:datafield[@tag=024 or @tag=028]">
+            <xsl:call-template name="subfieldSelect">
+                <xsl:with-param name="codes">ba</xsl:with-param>
+            </xsl:call-template>
+            <xsl:choose>
+                <xsl:when test="position()=last()"><xsl:text>.</xsl:text></xsl:when>
+                <xsl:otherwise><xsl:text>; </xsl:text></xsl:otherwise>
+            </xsl:choose>
+        </xsl:for-each>
+        </span>
+    </xsl:if>
+    
     <xsl:if test="marc:datafield[@tag=250]">
     <span class="results_summary">
     <span class="label">Edition: </span>
