@@ -1302,14 +1302,6 @@
           <xsl:otherwise>Contributor(s): </xsl:otherwise>
         </xsl:choose>
 
-        <!-- If author is linked to an authority, show information icon which links to authrority-->
-        <xsl:if test="marc:subfield[@code='9']">
-          <a>
-            <xsl:attribute name="href">/cgi-bin/koha/authorities/detail.pl?authid=<xsl:value-of select="marc:subfield[@code='9']"/></xsl:attribute>
-            <img src="/intranet-tmpl/prog/img/famfamfam/silk/information.png" alt="authority record" title="authority record"/>
-          </a>
-        </xsl:if>
-
         <a>
         <xsl:choose>
             <xsl:when test="marc:subfield[@code=9] and $UseAuthoritiesForTracings='1'">
@@ -1484,6 +1476,14 @@
         </xsl:choose>
         </a>
 
+        <!-- If author is linked to an authority, show information icon which links to authority-->
+        <xsl:if test="marc:subfield[@code='9']">
+            <a class="authoritylink">
+                <xsl:attribute name="href">/cgi-bin/koha/authorities/detail.pl?authid=<xsl:value-of select="marc:subfield[@code='9']"/></xsl:attribute>
+                <img src="/intranet-tmpl/prog/img/famfamfam/silk/bullet_blue_8x8.png" class="icon-authoritylink" alt="authority record" title="authority record"/>
+            </a>
+        </xsl:if>
+
     <!-- add relator code too between brackets-->
     <!-- #13383 include relator code j for field 111 -->
             <xsl:if test="marc:subfield[@code='4' or @code='e'][not(parent::*[@tag=111])] or (self::*[@tag=111] and marc:subfield[@code='4' or @code='j'][. != ''])">
@@ -1497,7 +1497,11 @@
                                     <xsl:for-each select="marc:subfield[@code='j']">
                                         <a>
                                             <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=au:"<xsl:value-of select="util:urlencode(../marc:subfield[@code='a'])"/>%20<xsl:value-of select="util:urlencode(.)"/>"</xsl:attribute>
-                                            <xsl:value-of select="."/>
+                                            <xsl:call-template name="chopPunctuation">
+                                                <xsl:with-param name="chopString">
+                                                    <xsl:value-of select="."/>
+                                                </xsl:with-param>
+                                            </xsl:call-template>
                                         </a>
                                         <xsl:if test="position() != last()">, </xsl:if>
                                     </xsl:for-each>
@@ -1515,7 +1519,11 @@
                             <xsl:for-each select="marc:subfield[@code='e']">
                                 <a>
                                     <xsl:attribute name="href">/cgi-bin/koha/catalogue/search.pl?q=au:"<xsl:value-of select="util:urlencode(../marc:subfield[@code='a'])"/>%20<xsl:value-of select="util:urlencode(.)"/>"</xsl:attribute>
-                                    <xsl:value-of select="."/>
+                                    <xsl:call-template name="chopPunctuation">
+                                        <xsl:with-param name="chopString">
+                                            <xsl:value-of select="."/>
+                                        </xsl:with-param>
+                                    </xsl:call-template>
                                 </a>
                                 <xsl:if test="position() != last()">, </xsl:if>
                             </xsl:for-each>
