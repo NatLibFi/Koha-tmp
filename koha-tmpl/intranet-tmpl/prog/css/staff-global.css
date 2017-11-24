@@ -3024,3 +3024,8 @@ fieldset.rows + fieldset.action {
 	padding-left: 2px;
 }
 
+.host_link {
+	font-weight: bold;
+	font-size:120%
+}
+
